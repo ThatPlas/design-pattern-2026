@@ -1,84 +1,42 @@
-package fr.fges;
+package fr.fges.game;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.fges.BoardGame;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.io.*;
 import java.util.List;
 
-public class GameCollection {
-    private static final List<BoardGame> games = new ArrayList<>();
-    private static String storageFile = "";
+public class GameRepository {
 
-    public static void setStorageFile(String file) {
-        storageFile = file;
-    }
-
-    public static List<BoardGame> getGames() {
-        return games;
-    }
-
-    public static void addGame(BoardGame game) {
-        games.add(game);
-        saveToFile();
-    }
-
-    public static void removeGame(BoardGame game) {
-        games.remove(game);
-        saveToFile();
-    }
-
-    public static void viewAllGames() {
-        if (games.isEmpty()) {
-            System.out.println("No board games in collection.");
-            return;
-        }
-
-        // Sort the games by their title alphabetically
-        List<BoardGame> sortedGames = games.stream()
-                .sorted(Comparator.comparing(BoardGame::title))
-                .toList();
-
-        for (BoardGame game : sortedGames) {
-            System.out.println("Game: " + game.title() + " (" + game.minPlayers() + "-" + game.maxPlayers() + " players) - " + game.category());
-        }
-    }
-
-    public static void loadFromFile() {
+    public void loadFromFile(GameCollection collection, String storageFile) {
         File file = new File(storageFile);
         if (!file.exists()) {
             return;
         }
 
         if (storageFile.endsWith(".json")) {
-            loadFromJson();
+            loadFromJson(collection, storageFile);
         } else if (storageFile.endsWith(".csv")) {
-            loadFromCsv();
+            loadFromCsv(collection, storageFile);
         }
     }
 
-    private static void loadFromJson() {
+    private void loadFromJson(GameCollection collection, String storageFile) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             File file = new File(storageFile);
             List<BoardGame> loadedGames = mapper.readValue(file, new TypeReference<List<BoardGame>>() {});
-            games.clear();
-            games.addAll(loadedGames);
+            collection.getGames().clear();
+            loadedGames.forEach(collection::addGame);
         } catch (IOException e) {
             System.out.println("Error loading from JSON: " + e.getMessage());
         }
     }
 
-    private static void loadFromCsv() {
+    private void loadFromCsv(GameCollection collection, String storageFile) {
         try (BufferedReader reader = new BufferedReader(new FileReader(storageFile))) {
-            games.clear();
+            collection.getGames().clear();
             String line;
             boolean firstLine = true;
             while ((line = reader.readLine()) != null) {
@@ -94,7 +52,7 @@ public class GameCollection {
                             Integer.parseInt(parts[2]),
                             parts[3]
                     );
-                    games.add(game);
+                    collection.addGame(game);
                 }
             }
         } catch (IOException e) {
@@ -102,28 +60,28 @@ public class GameCollection {
         }
     }
 
-    public static void saveToFile() {
+    public void saveToFile(GameCollection collection, String storageFile) {
         if (storageFile.endsWith(".json")) {
-            saveToJson();
+            saveToJson(collection, storageFile);
         } else if (storageFile.endsWith(".csv")) {
-            saveToCsv();
+            saveToCsv(collection, storageFile);
         }
     }
 
-    private static void saveToJson() {
+    private void saveToJson(GameCollection collection, String storageFile) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(storageFile), games);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(storageFile), collection.getGames());
         } catch (IOException e) {
             System.out.println("Error saving to JSON: " + e.getMessage());
         }
     }
 
-    private static void saveToCsv() {
+    private void saveToCsv(GameCollection collection, String storageFile) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(storageFile))) {
             writer.write("title,minPlayers,maxPlayers,category");
             writer.newLine();
-            for (BoardGame game : games) {
+            for (BoardGame game : collection.getGames()) {
                 writer.write(game.title() + "," + game.minPlayers() + "," + game.maxPlayers() + "," + game.category());
                 writer.newLine();
             }
@@ -131,4 +89,5 @@ public class GameCollection {
             System.out.println("Error saving to CSV: " + e.getMessage());
         }
     }
+
 }
