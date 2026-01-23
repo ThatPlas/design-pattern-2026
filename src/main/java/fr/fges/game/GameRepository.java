@@ -5,40 +5,45 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.fges.BoardGame;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GameRepository {
 
-    public void loadFromFile(GameCollection collection, String storageFile) {
+    public List<BoardGame> loadFromFile(String storageFile) {
         File file = new File(storageFile);
         if (!file.exists()) {
-            return;
+            return Collections.emptyList();
         }
 
         if (storageFile.endsWith(".json")) {
-            loadFromJson(collection, storageFile);
+            return loadFromJson(storageFile);
         } else if (storageFile.endsWith(".csv")) {
-            loadFromCsv(collection, storageFile);
+            return loadFromCsv(storageFile);
+        } else {
+            return Collections.emptyList();
         }
     }
 
-    private void loadFromJson(GameCollection collection, String storageFile) {
+    private List<BoardGame> loadFromJson(String storageFile) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             File file = new File(storageFile);
             List<BoardGame> loadedGames = mapper.readValue(file, new TypeReference<List<BoardGame>>() {});
-            collection.getGames().clear();
-            loadedGames.forEach(collection::addGame);
+
+            return loadedGames;
         } catch (IOException e) {
             System.out.println("Error loading from JSON: " + e.getMessage());
+            return Collections.emptyList();
         }
     }
 
-    private void loadFromCsv(GameCollection collection, String storageFile) {
+    private List<BoardGame> loadFromCsv(String storageFile) {
         try (BufferedReader reader = new BufferedReader(new FileReader(storageFile))) {
-            collection.getGames().clear();
             String line;
             boolean firstLine = true;
+            List<BoardGame> loadedGames = new ArrayList<>();
             while ((line = reader.readLine()) != null) {
                 if (firstLine) {
                     firstLine = false;
@@ -52,11 +57,13 @@ public class GameRepository {
                             Integer.parseInt(parts[2]),
                             parts[3]
                     );
-                    collection.addGame(game);
+                    loadedGames.add(game);
                 }
             }
+            return loadedGames;
         } catch (IOException e) {
             System.out.println("Error loading from CSV: " + e.getMessage());
+            return Collections.emptyList();
         }
     }
 
