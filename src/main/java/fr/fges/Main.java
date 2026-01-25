@@ -3,8 +3,16 @@ package fr.fges;
 import fr.fges.game.GameCollection;
 import fr.fges.game.GameRepository;
 
+/**
+ * Application entry point for the board game collection CLI.
+ */
 public class Main {
 
+    /**
+     * Boots the application and starts the menu loop.
+     *
+     * @param args command-line arguments with storage file path
+     */
     public static void main(String[] args) {
 
         if (args.length < 1) {

@@ -9,8 +9,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Loads and saves games to CSV or JSON storage.
+ */
 public class GameRepository {
 
+    /**
+     * Loads games from the given storage file.
+     *
+     * @param storageFile path to the storage file
+     * @return list of games or empty list if missing or invalid
+     */
     public List<BoardGame> loadFromFile(String storageFile) {
         File file = new File(storageFile);
         if (!file.exists()) {
@@ -26,6 +35,12 @@ public class GameRepository {
         }
     }
 
+    /**
+     * Loads games from a JSON file.
+     *
+     * @param storageFile path to the JSON file
+     * @return list of loaded games or empty list on error
+     */
     private List<BoardGame> loadFromJson(String storageFile) {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -39,6 +54,12 @@ public class GameRepository {
         }
     }
 
+    /**
+     * Loads games from a CSV file.
+     *
+     * @param storageFile path to the CSV file
+     * @return list of loaded games or empty list on error
+     */
     private List<BoardGame> loadFromCsv(String storageFile) {
         try (BufferedReader reader = new BufferedReader(new FileReader(storageFile))) {
             String line;
@@ -67,6 +88,12 @@ public class GameRepository {
         }
     }
 
+    /**
+     * Saves games to the given storage file.
+     *
+     * @param collection games to save
+     * @param storageFile path to the storage file
+     */
     public void saveToFile(GameCollection collection, String storageFile) {
         if (storageFile.endsWith(".json")) {
             saveToJson(collection, storageFile);
@@ -75,6 +102,12 @@ public class GameRepository {
         }
     }
 
+    /**
+     * Saves games to a JSON file.
+     *
+     * @param collection games to save
+     * @param storageFile path to the JSON file
+     */
     private void saveToJson(GameCollection collection, String storageFile) {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -84,6 +117,12 @@ public class GameRepository {
         }
     }
 
+    /**
+     * Saves games to a CSV file.
+     *
+     * @param collection games to save
+     * @param storageFile path to the CSV file
+     */
     private void saveToCsv(GameCollection collection, String storageFile) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(storageFile))) {
             writer.write("title,minPlayers,maxPlayers,category");

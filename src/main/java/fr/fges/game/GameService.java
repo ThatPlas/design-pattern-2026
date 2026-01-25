@@ -4,8 +4,16 @@ import fr.fges.BoardGame;
 import fr.fges.InputHandler;
 import fr.fges.MenuView;
 
+/**
+ * Handles user-driven operations on games.
+ */
 public class GameService {
 
+    /**
+     * Prompts for game details and adds the game to the collection.
+     *
+     * @param gameCollection collection to modify
+     */
     public static void addGame(GameCollection gameCollection) {
         String title = InputHandler.ask("Title");
         int minPlayers = Integer.parseInt(InputHandler.ask("Minimum Players"));
@@ -18,6 +26,11 @@ public class GameService {
         MenuView.showMessage("Board game added successfully.");
     }
 
+    /**
+     * Prompts for a title and removes the first matching game.
+     *
+     * @param gameCollection collection to modify
+     */
     public static void removeGame(GameCollection gameCollection) {
         String title = InputHandler.ask("Title of game to remove");
 
@@ -31,6 +44,11 @@ public class GameService {
         MenuView.showMessage("No board game found with that title.");
     }
 
+    /**
+     * Displays all games in the collection.
+     *
+     * @param gameCollection collection to display
+     */
     public static void listGames(GameCollection gameCollection) {
 
         GamePrinter gamePrinter = new GamePrinter(gameCollection);

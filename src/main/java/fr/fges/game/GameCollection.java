@@ -6,21 +6,44 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * In-memory collection of board games.
+ */
 public class GameCollection {
     private final List<BoardGame> games = new ArrayList<>();
 
+    /**
+     * Returns the mutable list of games.
+     *
+     * @return list of games
+     */
     public List<BoardGame> getGames() {
         return games;
     }
 
+    /**
+     * Adds a game to the collection.
+     *
+     * @param game game to add
+     */
     public void addGame(BoardGame game) {
         games.add(game);
     }
 
+    /**
+     * Adds multiple games to the collection.
+     *
+     * @param games games to add
+     */
     public void addGames(List<BoardGame> games) {
         this.games.addAll(games);
     }
 
+    /**
+     * Removes a game from the collection.
+     *
+     * @param game game to remove
+     */
     public void removeGame(BoardGame game) {
         games.remove(game);
     }

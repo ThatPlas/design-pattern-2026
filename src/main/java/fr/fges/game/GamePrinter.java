@@ -5,14 +5,25 @@ import fr.fges.BoardGame;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Prints games from a collection to the console.
+ */
 public class GamePrinter {
 
     private GameCollection gameCollection;
 
+    /**
+     * Creates a printer for the given collection.
+     *
+     * @param gameCollection collection to render
+     */
     public GamePrinter(GameCollection gameCollection) {
         this.gameCollection = gameCollection;
     }
 
+    /**
+     * Displays all games in alphabetical order.
+     */
     public void viewAllGames() {
         if (this.gameCollection.getGames().isEmpty()) {
             System.out.println("No board games in collection.");

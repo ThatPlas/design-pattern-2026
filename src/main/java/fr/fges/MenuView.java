@@ -1,8 +1,13 @@
 package fr.fges;
 
-//gestion affichage console 
+/**
+ * Renders menu and status output to the console.
+ */
 public class MenuView {
 
+    /**
+     * Displays the main menu options.
+     */
     public static void displayMainMenu() {
         System.out.println("""
                 === Board Game Collection ===
@@ -14,6 +19,11 @@ public class MenuView {
                 """);
     }
 
+    /**
+     * Prints a message to the console.
+     *
+     * @param message message to display
+     */
     public static void showMessage(String message) {
         System.out.println(message);
     }

@@ -5,8 +5,16 @@ import fr.fges.game.GameService;
 
 import java.util.Scanner;
 
+/**
+ * Handles user choices from the main menu.
+ */
 public class MenuController {
 
+    /**
+     * Displays the menu and dispatches the user's selection.
+     *
+     * @param collection game collection to operate on
+     */
     public static void handleMenu(GameCollection collection) {
         MenuView.displayMainMenu();
 
@@ -22,6 +30,9 @@ public class MenuController {
         }
     }
 
+    /**
+     * Terminates the application.
+     */
     private static void exit() {
         MenuView.showMessage("Exiting the application. Goodbye!");
         System.exit(0);
