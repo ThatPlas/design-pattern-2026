@@ -27,7 +27,7 @@ public class Main {
         System.out.println("Using storage file: " + storageFile);
 
         while (true) {
-            MenuController.handleMenu();
+            MenuController.handleMenu(collection);
         }
     }
 }

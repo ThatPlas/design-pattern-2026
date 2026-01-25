@@ -1,10 +1,19 @@
 package fr.fges;
 
+import java.io.InputStream;
 import java.util.Scanner;
-//Lecture des entrées USER
+
 public class InputHandler {
 
-    private static final Scanner scanner = new Scanner(System.in);
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void setInput(InputStream input) {
+        scanner = new Scanner(input);
+    }
+
+    public static void resetScanner() {
+        scanner = new Scanner(System.in);
+    }
 
     public static String ask(String prompt) {
         System.out.printf("%s: ", prompt);

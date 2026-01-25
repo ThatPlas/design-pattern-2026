@@ -4,18 +4,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayInputStream;
 
-import org.junit.jupiter.api.BeforeEach;
+import fr.fges.game.GameCollection;
+import fr.fges.game.GameService;
 import org.junit.jupiter.api.Test;
 
 class GameServiceTest {
 
-    @BeforeEach
-    void setUp() {
-        GameCollection.getGames().clear();
-    }
-
     @Test
     void addGame_shouldAddGameToCollection() {
+
+        GameCollection collection = new GameCollection();
+
         String input = """
                 Catan
                 3
@@ -23,23 +22,25 @@ class GameServiceTest {
                 Strategy
                 """;
 
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        InputHandler.setInput(new ByteArrayInputStream(input.getBytes()));
 
-        GameService.addGame();
+        GameService.addGame(collection);
 
-        assertEquals(1, GameCollection.getGames().size());
-        assertEquals("Catan", GameCollection.getGames().get(0).title());
+        assertEquals(1, collection.getGames().size());
+        assertEquals("Catan", collection.getGames().getFirst().title());
     }
 
     @Test
     void removeGame_shouldRemoveExistingGame() {
+
+        GameCollection collection = new GameCollection();
         BoardGame game = new BoardGame("Catan", 3, 4, "Strategy");
-        GameCollection.addGame(game);
+        collection.addGame(game);
 
-        System.setIn(new ByteArrayInputStream("Catan\n".getBytes()));
+        InputHandler.setInput(new ByteArrayInputStream("Catan\n".getBytes()));
 
-        GameService.removeGame();
+        GameService.removeGame(collection);
 
-        assertEquals(0, GameCollection.getGames().size());
+        assertEquals(0, collection.getGames().size());
     }
 }
