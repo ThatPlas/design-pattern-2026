@@ -17,6 +17,10 @@ public class GameCollection {
         games.add(game);
     }
 
+    public void addGames(List<BoardGame> games) {
+        this.games.addAll(games);
+    }
+
     public void removeGame(BoardGame game) {
         games.remove(game);
     }
