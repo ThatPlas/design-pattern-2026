@@ -1,5 +1,11 @@
 package fr.fges;
 
+import fr.fges.game.GameRepository;
+import fr.fges.ExtensionChecker;
+import fr.fges.Menu;
+
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
         if (args.length < 1) {
@@ -10,14 +16,9 @@ public class Main {
 
         String storageFile = args[0];
 
-        // Check file extension
-        if (!storageFile.endsWith(".json") && !storageFile.endsWith(".csv")) {
-            System.out.println("Error: Storage file must have .json or .csv extension");
-            System.exit(1);
-        }
+        ExtensionChecker.checkFileExtension(storageFile);
 
-        GameCollection.setStorageFile(storageFile);
-        GameCollection.loadFromFile();
+        GameRepository.loadFromFile(storageFile);
 
         System.out.println("Using storage file: " + storageFile);
 
