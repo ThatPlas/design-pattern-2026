@@ -1,0 +1,78 @@
+---
+  config:
+    class:
+      hideEmptyMembersBox: true
+---
+
+classDiagram
+    Main <|-- ExtensionChecker
+    Main <|-- GameRepository
+    Main <|-- MenuController
+
+    MenuController --> MenuView
+    MenuController --> GameService
+
+    GameService --> InputHandler
+    GameService --> GameCollection
+    GameService --> BoardGame
+
+    GameCollection --|> BoardGame
+    GameRepository --|> BoardGame
+    GamePrinter --|> BoardGame
+
+    GamePrinter --> GameCollection
+
+    ExtensionChecker: +checkFileExtension(String storageFile)
+
+    class Main{
+        +String storageFile
+    }
+
+    class BoardGame{
+        +String title
+        +int minPlayers
+        +int maxPlayers
+        +String category
+    }
+
+    class MenuController{
+        +handleMenu()
+        -exit()
+    }
+
+    class MenuView{
+        +displayMainMenu()
+        +showMessage(String message)
+    }
+
+    class InputHandler{
+        +ask(String prompt)
+    }
+
+    class GameService{
+        +addGame()
+        +removeGame()
+        +listGames()
+    }
+
+    class GameRepository{
+        +loadFromFile(String storageFile)
+        -loadFromJson(String storageFile)
+        -loadFromCsv(String storageFile)
+        +saveToFile(GameCollection collection, String storageFile)
+        -saveToJson(GameCollection collection, String storageFile)
+        -saveToCsv(GameCollection collection, String storageFile)
+    }
+
+    class GameCollection{
+        -List~BoardGame~ games
+        +getGames()
+        +addGame(BoardGame game)
+        +removeGame(BoardGame game)
+    }
+
+    class GamePrinter{
+        -GameCollection gameCollection
+        +viewAllGames()
+        +GamePrinter(GameCollection gameCollection)
+    }
