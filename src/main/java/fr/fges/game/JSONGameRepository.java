@@ -12,12 +12,14 @@ import java.util.List;
 
 public class JSONGameRepository implements Repository<List<BoardGame>> {
     @Override
-    public void save(List<BoardGame> object, String file) {
+    public boolean save(List<BoardGame> object, String file) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.writerWithDefaultPrettyPrinter().writeValue(new File(file), object);
+            return true;
         } catch (IOException e) {
             System.out.println("Error saving to JSON: " + e.getMessage());
+            return false;
         }
     }
 

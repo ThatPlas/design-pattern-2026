@@ -52,12 +52,14 @@ public class GameRepository {
      * @param collection games to save
      * @param storageFile path to the storage file
      */
-    public void saveToFile(GameCollection collection, String storageFile) {
+    public boolean saveToFile(GameCollection collection, String storageFile) {
         if (storageFile.endsWith(".json")) {
-            save(collection, storageFile, new JSONGameRepository());
+            return save(collection, storageFile, new JSONGameRepository());
         } else if (storageFile.endsWith(".csv")) {
-            save(collection, storageFile, new CSVGameRepository());
+            return save(collection, storageFile, new CSVGameRepository());
         }
+
+        return false;
     }
 
     /**
@@ -66,8 +68,8 @@ public class GameRepository {
      * @param collection games to save
      * @param storageFile path to the file
      */
-    private void save(GameCollection collection, String storageFile, Repository<List<BoardGame>> repository) {
-        repository.save(collection.getGames(), storageFile);
+    private boolean save(GameCollection collection, String storageFile, Repository<List<BoardGame>> repository) {
+        return repository.save(collection.getGames(), storageFile);
     }
 
 }

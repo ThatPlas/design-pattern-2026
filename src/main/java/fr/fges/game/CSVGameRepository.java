@@ -11,7 +11,7 @@ import java.util.List;
 public class CSVGameRepository implements Repository<List<BoardGame>> {
 
     @Override
-    public void save(List<BoardGame> games, String file) {
+    public boolean save(List<BoardGame> games, String file) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write("title,minPlayers,maxPlayers,category");
             writer.newLine();
@@ -19,8 +19,10 @@ public class CSVGameRepository implements Repository<List<BoardGame>> {
                 writer.write(game.title() + "," + game.minPlayers() + "," + game.maxPlayers() + "," + game.category());
                 writer.newLine();
             }
+            return true;
         } catch (IOException e) {
             System.out.println("Error saving to CSV: " + e.getMessage());
+            return false;
         }
     }
 
