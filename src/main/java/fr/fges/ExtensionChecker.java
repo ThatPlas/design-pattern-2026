@@ -1,5 +1,8 @@
 package fr.fges;
 
+import fr.fges.exception.UnsupportedFileExtension;
+import fr.fges.game.GameRepository;
+
 /**
  * Validates storage file extensions.
  */
@@ -9,10 +12,13 @@ public class ExtensionChecker {
      *
      * @param storageFile storage file path to validate
      */
-    public static void checkFileExtension(String storageFile) {
-        if (!storageFile.endsWith(".json") && !storageFile.endsWith(".csv")) {
-            System.out.println("Error: Storage file must have .json or .csv extension");
-            System.exit(1);
+    public static void checkFileExtension(String storageFile, GameRepository repository) throws UnsupportedFileExtension {
+
+        String extension = storageFile.toLowerCase().substring(storageFile.lastIndexOf('.'));
+
+        if(!repository.isSupportedExtension(extension)){
+            throw new UnsupportedFileExtension(extension + " is not supported.");
         }
+
     }
 }

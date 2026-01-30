@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class GameCollectionTest {
 
     @Test
-    public void testAddGame() {
+    public void addGame() {
         GameCollection collection = new GameCollection();
 
         collection.addGame(new BoardGame("Catan", 3, 4, "strategy"));
@@ -16,7 +16,7 @@ public class GameCollectionTest {
     }
 
     @Test
-    public void testRemoveGame(){
+    public void removeGame(){
         GameCollection collection = new GameCollection();
         collection.addGame(new BoardGame("Catan", 3, 4, "strategy"));
         collection.removeGame(collection.getGames().getFirst());

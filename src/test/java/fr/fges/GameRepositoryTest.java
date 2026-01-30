@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GameRepositoryTest {
 
@@ -18,7 +17,7 @@ public class GameRepositoryTest {
         GameCollection collection = new GameCollection();
 
         collection.addGame(new BoardGame("Catan", 3, 4, "strategy"));
-        assertTrue(repository.saveToFile(collection, "test.json"));
+        assertTrue(repository.saveToFile(collection, "saves/test.json"));
     }
 
     @Test
@@ -27,20 +26,30 @@ public class GameRepositoryTest {
         GameCollection collection = new GameCollection();
 
         collection.addGame(new BoardGame("Catan", 3, 4, "strategy"));
-        assertTrue(repository.saveToFile(collection, "test.csv"));
+        assertTrue(repository.saveToFile(collection, "saves/test.csv"));
     }
 
     @Test
-    public void testLoadFromMissingFile() {
+    public void saveToUnsupportedFile(){
+
+        GameRepository repository = new GameRepository();
+        GameCollection collection = new GameCollection();
+
+        collection.addGame(new BoardGame("Catan", 3, 4, "strategy"));
+        assertFalse(repository.saveToFile(collection, "saves/test.txt"));
+    }
+
+    @Test
+    public void loadFromMissingFile() {
         GameRepository repository = new GameRepository();
         List<BoardGame> games = repository.loadFromFile("nonexistent.json");
         assertEquals(0, games.size());
     }
 
     @Test
-    public void testLoadFromUnsupportedFile() {
+    public void loadFromUnsupportedFile() {
         GameRepository repository = new GameRepository();
-        List<BoardGame> games = repository.loadFromFile("nonexistent.txt");
+        List<BoardGame> games = repository.loadFromFile("unsupported.txt");
         assertEquals(0, games.size());
     }
 
@@ -48,7 +57,7 @@ public class GameRepositoryTest {
     public void loadFromCSVFile(){
         GameRepository repository = new GameRepository();
 
-        List<BoardGame> games = repository.loadFromFile("test.csv");
+        List<BoardGame> games = repository.loadFromFile("saves/test.csv");
         assertEquals(1, games.size());
     }
 
@@ -56,7 +65,7 @@ public class GameRepositoryTest {
     public void loadFromJSONFile(){
         GameRepository repository = new GameRepository();
 
-        List<BoardGame> games = repository.loadFromFile("test.json");
+        List<BoardGame> games = repository.loadFromFile("saves/test.json");
         assertEquals(1, games.size());
     }
 }

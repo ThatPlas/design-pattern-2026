@@ -1,5 +1,6 @@
 package fr.fges;
 
+import fr.fges.exception.UnsupportedFileExtension;
 import fr.fges.game.GameCollection;
 import fr.fges.game.GameRepository;
 
@@ -13,19 +14,19 @@ public class Main {
      *
      * @param args command-line arguments with storage file path
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedFileExtension {
 
         if (args.length < 1) {
             System.out.println("Usage: java -jar boardgamecollection.jar <storage-file>");
-            System.out.println("Storage file must be .json or .csv");
+            System.out.println("Storage file must be a supported format.");
             System.exit(1);
         }
 
-        String storageFile = args[0];
-
-        ExtensionChecker.checkFileExtension(storageFile);
-
         GameRepository repository = new GameRepository();
+
+        String storageFile = args[0];
+        ExtensionChecker.checkFileExtension(storageFile, repository);
+
         GameCollection collection = new GameCollection();
 
         collection.addGames(

@@ -3,17 +3,29 @@ package fr.fges.game;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.fges.BoardGame;
+import fr.fges.ExtensionChecker;
 import fr.fges.Repository;
+import fr.fges.exception.UnsupportedFileExtension;
 
+import javax.xml.validation.Validator;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Loads and saves games to CSV or JSON storage.
  */
 public class GameRepository {
+
+    private final Map<String, Repository<List<BoardGame>>> repositories = new HashMap<>();
+
+    public GameRepository(){
+        repositories.put(".json", new JSONGameRepository());
+        repositories.put(".csv", new CSVGameRepository());
+    }
+
+    public void registerRepository(String extension, Repository<List<BoardGame>> repository){
+        repositories.put(extension.toLowerCase(), repository);
+    }
 
     /**
      * Loads games from the given storage file.
@@ -27,22 +39,14 @@ public class GameRepository {
             return Collections.emptyList();
         }
 
-        if (storageFile.endsWith(".json")) {
-            return load(storageFile, new JSONGameRepository());
-        } else if (storageFile.endsWith(".csv")) {
-            return load(storageFile, new CSVGameRepository());
-        } else {
+        try {
+            ExtensionChecker.checkFileExtension(storageFile, this);
+        } catch (UnsupportedFileExtension e) {
             return Collections.emptyList();
         }
-    }
 
-    /**
-     * Loads games from a file.
-     *
-     * @param storageFile path to the file
-     * @return list of loaded games or empty list on error
-     */
-    private List<BoardGame> load(String storageFile, Repository<List<BoardGame>> repository) {
+        Repository<List<BoardGame>> repository = repositories.get(storageFile.toLowerCase().substring(storageFile.lastIndexOf('.')));
+
         return repository.load(storageFile);
     }
 
@@ -51,25 +55,43 @@ public class GameRepository {
      *
      * @param collection games to save
      * @param storageFile path to the storage file
+     * @return true if save operation was successful, false otherwise
      */
     public boolean saveToFile(GameCollection collection, String storageFile) {
-        if (storageFile.endsWith(".json")) {
-            return save(collection, storageFile, new JSONGameRepository());
-        } else if (storageFile.endsWith(".csv")) {
-            return save(collection, storageFile, new CSVGameRepository());
+
+        try {
+            ExtensionChecker.checkFileExtension(storageFile, this);
+        } catch (UnsupportedFileExtension e) {
+            return false;
         }
 
-        return false;
+        File file = new File(storageFile);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                return false;
+            }
+        }
+
+        if(collection == null){
+            return false;
+        }
+
+        Repository<List<BoardGame>> repository = repositories.get(storageFile.toLowerCase().substring(storageFile.lastIndexOf('.')));
+
+        return repository.save(collection.getGames(), storageFile);
     }
 
     /**
-     * Saves games to a file.
+     * Checks if the given file extension is supported by any repository.
      *
-     * @param collection games to save
-     * @param storageFile path to the file
+     * @param extension file extension to check
+     * @return true if supported, false otherwise
      */
-    private boolean save(GameCollection collection, String storageFile, Repository<List<BoardGame>> repository) {
-        return repository.save(collection.getGames(), storageFile);
+
+    public boolean isSupportedExtension(String extension) {
+        return repositories.containsKey(extension.toLowerCase());
     }
 
 }
