@@ -3,6 +3,7 @@ package fr.fges;
 import fr.fges.exception.UnsupportedFileExtension;
 import fr.fges.game.GameCollection;
 import fr.fges.game.GameRepository;
+import fr.fges.menu.MenuController;
 
 /**
  * Application entry point for the board game collection CLI.

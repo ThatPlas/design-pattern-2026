@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import java.io.ByteArrayInputStream;
 
 import fr.fges.game.GameCollection;
+import fr.fges.menu.MenuController;
 import org.junit.jupiter.api.Test;
 
 class MenuControllerTest {

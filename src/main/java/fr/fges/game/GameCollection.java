@@ -47,4 +47,8 @@ public class GameCollection {
     public void removeGame(BoardGame game) {
         games.remove(game);
     }
+
+    public boolean isPresent(String title){
+        return games.stream().anyMatch(game -> game.title().equals(title));
+    }
 }

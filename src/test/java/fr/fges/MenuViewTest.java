@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.List;
 
+import fr.fges.menu.MenuView;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,11 +28,11 @@ class MenuViewTest {
 
     @Test
     void displayMainMenu_shouldPrintMenu() {
-        MenuView.displayMainMenu();
+        MenuView.displayMainMenu(List.of("Add Board Game", "View Collection", "Exit"));
 
         String output = outputStream.toString();
-        assertTrue(output.contains("Board Game Collection"));
         assertTrue(output.contains("Add Board Game"));
+        assertTrue(output.contains("View Collection"));
         assertTrue(output.contains("Exit"));
     }
 
