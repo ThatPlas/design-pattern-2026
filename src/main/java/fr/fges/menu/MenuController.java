@@ -22,7 +22,7 @@ public class MenuController {
 
     public static void handleMenu(GameCollection collection) {
         MenuCreator menuCreator = new MenuCreator();
-        Map<String, Integer> availableOptions = menuCreator.getAvailableOptions(LocalDate.now().plusDays(2));
+        Map<String, Integer> availableOptions = menuCreator.getAvailableOptions(LocalDate.now());
         List<String> optionsList = new ArrayList<>(availableOptions.keySet());
 
         MenuView.displayMainMenu(optionsList);
