@@ -10,6 +10,8 @@ import fr.fges.menu.MenuController;
  */
 public class Main {
 
+    private static String storageFile;
+
     /**
      * Boots the application and starts the menu loop.
      *
@@ -25,6 +27,8 @@ public class Main {
 
         GameRepository repository = new GameRepository();
 
+        Main.storageFile = args[0];
+
         String storageFile = args[0];
         ExtensionChecker.checkFileExtension(storageFile, repository);
 
@@ -39,6 +43,11 @@ public class Main {
         while (true) {
             MenuController.handleMenu(collection);
         }
+
+    }
+
+    public static String getStorageFile(){
+        return Main.storageFile;
     }
 }
 
