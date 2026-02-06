@@ -19,6 +19,7 @@ public class MenuCreator {
         options.add(new ListGameOption());
         options.add(new RecommandGameOption());
         options.add(new ViewSummaryOption());
+        options.add(new UndoActionOption());
         options.add(new ExitOption());
     }
 

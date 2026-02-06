@@ -2,6 +2,9 @@ package fr.fges.game;
 
 import fr.fges.BoardGame;
 import fr.fges.InputHandler;
+import fr.fges.history.HistoryService;
+import fr.fges.history.actions.AddGameLog;
+import fr.fges.history.actions.RemoveGameLog;
 import fr.fges.menu.MenuView;
 
 /**
@@ -29,6 +32,7 @@ public class GameService {
 
         gameCollection.addGame(game);
         MenuView.showMessage("Board game added successfully.");
+        HistoryService.addLogAction(gameCollection.getHistory(), new AddGameLog(gameCollection, game));
     }
 
     public static void recommendGame(GameCollection gameCollection){
@@ -58,11 +62,17 @@ public class GameService {
         for (BoardGame game : gameCollection.getGames()) {
             if (game.title().equals(title)) {
                 gameCollection.removeGame(game);
+                HistoryService.addLogAction(gameCollection.getHistory(), new RemoveGameLog(gameCollection, game));
                 MenuView.showMessage("Board game removed successfully.");
                 return;
             }
         }
         MenuView.showMessage("No board game found with that title.");
+    }
+
+    public static void undoLastAction(GameCollection gameCollection){
+        HistoryService.revertLastAction(gameCollection);
+        MenuView.showMessage("Last action reverted successfully.");
     }
 
     /**

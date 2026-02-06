@@ -1,16 +1,23 @@
 package fr.fges.game;
 
 import fr.fges.BoardGame;
+import fr.fges.history.History;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
  * In-memory collection of board games.
  */
 public class GameCollection {
-    private final List<BoardGame> games = new ArrayList<>();
+    private final List<BoardGame> games;
+
+    private final History history;
+
+    public GameCollection(){
+        this.history = new History();
+        this.games = new ArrayList<>();
+    }
 
     /**
      * Returns the mutable list of games.
@@ -19,6 +26,15 @@ public class GameCollection {
      */
     public List<BoardGame> getGames() {
         return games;
+    }
+
+    /**
+     * Returns the history of changes.
+     *
+     * @return LogHistory object
+     */
+    public History getHistory(){
+        return this.history;
     }
 
     /**
