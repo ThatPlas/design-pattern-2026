@@ -1,0 +1,54 @@
+graph TD
+  subgraph Core ["Core (Racine)"]
+    BM("BoardGame<br/>- title,minPlayers,maxPlayers,category")
+    Main("Main<br/>- main(args)<br/>- getStorageFile()")
+    Input("InputHandler")
+    Ext("ExtensionChecker")
+  end
+
+  subgraph Game_Logic ["Gestion des Jeux"]
+    GC("GameCollection")
+    GS("GameService")
+    GP("GamePrinter")
+    GR("GameRepository")
+  end
+
+  subgraph UI_Navigation ["Interface & Navigation"]
+    MC("MenuController")
+    MCreator("MenuCreator")
+    MView("MenuView")
+  end
+
+  subgraph Menu_Components ["Composants du Menu (Groupés)"]
+    MO_File("<b>MenuOptions.java</b><br/><i>Options disponibles :</i><br/>Add, Remove, List, Filter, Reco, etc.")
+    
+    MH_File("<b>MenuHandlers.java</b><br/><i>Logique d'exécution :</i><br/>Traite les entrées vers GameService")
+  end
+
+  subgraph History_Module ["Historique & Logs"]
+    Hist("History")
+    HService("HistoryService")
+  end
+
+  %% Relations
+  Main -->|init| GR
+  Main -->|instancie| GC
+  Main -->|lance| MC
+
+  MC -->|utilise| MCreator
+  MCreator -->|génère| MO_File
+  
+  %% Flux Logique
+  MO_File -->|déclenche| MH_File
+  MH_File -->|appelle| GS
+  
+  GS -->|modifie| GC
+  GS -->|enregistre| HService
+  GC -->|possède| Hist
+
+  %% Styling
+  classDef grouped fill:#fff4dd,stroke:#d4a017,stroke-width:2px;
+  classDef pkg fill:#f2f9ff,stroke:#0366d6,stroke-width:1px;
+  
+  class Core,Game_Logic,UI_Navigation,History_Module pkg;
+  class MO_File,MH_File grouped;
