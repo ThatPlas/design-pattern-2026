@@ -89,4 +89,23 @@ public class GameService {
         GamePrinter gamePrinter = new GamePrinter(gameCollection);
         gamePrinter.summaryGames();
     }
+
+    public static void filterGamesByPlayerCount(GameCollection gameCollection){
+        int players = Integer.parseInt(InputHandler.ask("How many players?:"));
+
+        java.util.List<BoardGame> filteredGames = gameCollection.getGames().stream()
+                .filter(g -> g.minPlayers() <= players && g.maxPlayers() >= players)
+                .sorted(java.util.Comparator.comparing(BoardGame::title))
+                .toList();
+
+        if(filteredGames.isEmpty()){
+            MenuView.showMessage("No games found for " + players + " player(s).");
+            return;
+        }
+
+        MenuView.showMessage("\n=== Games for " + players + " player(s) ===");
+        for(BoardGame game : filteredGames){
+            MenuView.showMessage("- " + game.title() + " (" + game.minPlayers() + "-" + game.maxPlayers() + " players, " + game.category() + ")");
+        }
+    }
 }
