@@ -7,7 +7,7 @@ import java.util.List;
 
 public class History {
 
-    private List<LogAction<?>> actions;
+    private final List<LogAction<?>> actions;
 
     public History(){
         this.actions = new ArrayList<>();
