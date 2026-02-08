@@ -13,11 +13,11 @@ public class History {
         this.actions = new ArrayList<>();
     }
 
-    protected List<LogAction<?>> getActions(){
+    public List<LogAction<?>> getActions(){
         return this.actions;
     }
 
-    protected LogAction<?> getLastAction(){
+    public LogAction<?> getLastAction(){
         return this.getActions().getLast();
     }
 
