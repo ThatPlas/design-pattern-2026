@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-public class JSONGameRepository implements Repository<List<BoardGame>> {
+public class JSONGameRepository implements Repository {
     @Override
     public boolean save(List<BoardGame> object, String file) {
         try {
@@ -28,7 +28,8 @@ public class JSONGameRepository implements Repository<List<BoardGame>> {
         try {
             ObjectMapper mapper = new ObjectMapper();
             File file = new File(storageFile);
-            List<BoardGame> loadedGames = mapper.readValue(file, new TypeReference<List<BoardGame>>() {});
+            List<BoardGame> loadedGames = mapper.readValue(file, new TypeReference<>() {
+            });
 
             return loadedGames;
         } catch (IOException e) {

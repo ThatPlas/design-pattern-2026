@@ -2,40 +2,46 @@ package fr.fges.game;
 
 import fr.fges.BoardGame;
 import fr.fges.InputHandler;
+import fr.fges.Main;
 import fr.fges.history.HistoryService;
 import fr.fges.history.actions.AddGameLog;
 import fr.fges.history.actions.RemoveGameLog;
 import fr.fges.menu.MenuView;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Handles user-driven operations on games.
  */
 public class GameService {
 
+    private final GameRepository repository;
+    private final HistoryService historyService;
+
+    public GameService(GameRepository gameRepository, HistoryService historyService){
+        this.repository = gameRepository;
+        this.historyService = historyService;
+    }
+
     /**
      * Prompts for game details and adds the game to the collection.
      *
      * @param gameCollection collection to modify
      */
-    public static void addGame(GameCollection gameCollection) {
-        String title = InputHandler.ask("Title");
-        int minPlayers = Integer.parseInt(InputHandler.ask("Minimum Players"));
-        int maxPlayers = Integer.parseInt(InputHandler.ask("Maximum Players"));
-        String category = InputHandler.ask("Category");
+    public boolean addGame(GameCollection gameCollection, BoardGame game) {
 
-        BoardGame game = new BoardGame(title, minPlayers, maxPlayers, category);
-
-        if(gameCollection.isPresent(title)){
-            MenuView.showMessage("Error: A game with the title \"" + title + "\" already exists in the collection.");
-            return;
+        if(gameCollection.isPresent(game.title())){
+            return false;
         }
 
         gameCollection.addGame(game);
-        MenuView.showMessage("Board game added successfully.");
-        HistoryService.addLogAction(gameCollection.getHistory(), new AddGameLog(gameCollection, game));
+        this.historyService.addLogAction(gameCollection.getHistory(), new AddGameLog(gameCollection, game));
+        this.repository.saveToFile(gameCollection, Main.getStorageFile());
+        return true;
     }
 
-    public static void recommendGame(GameCollection gameCollection){
+    public Optional<BoardGame> recommendGame(GameCollection gameCollection){
         int players = Integer.parseInt(InputHandler.ask("How many players?:"));
 
         BoardGame game = gameCollection.getGames().stream()
@@ -43,12 +49,7 @@ public class GameService {
                 .findFirst()
                 .orElse(null);
 
-        if(game == null){
-            MenuView.showMessage("No game found.");
-            return;
-        }
-
-        MenuView.showMessage("Recommended game: \"" + game + "\" (" + game.minPlayers() + "-" + game.maxPlayers() + " players, " + game.category() + ")");
+        return Optional.ofNullable(game);
     }
 
     /**
@@ -56,56 +57,30 @@ public class GameService {
      *
      * @param gameCollection collection to modify
      */
-    public static void removeGame(GameCollection gameCollection) {
-        String title = InputHandler.ask("Title of game to remove");
+    public boolean removeGame(GameCollection gameCollection, String title) {
 
         for (BoardGame game : gameCollection.getGames()) {
             if (game.title().equals(title)) {
                 gameCollection.removeGame(game);
-                HistoryService.addLogAction(gameCollection.getHistory(), new RemoveGameLog(gameCollection, game));
-                MenuView.showMessage("Board game removed successfully.");
-                return;
+                this.historyService.addLogAction(gameCollection.getHistory(), new RemoveGameLog(gameCollection, game));
+                this.repository.saveToFile(gameCollection, Main.getStorageFile());
+                return true;
             }
         }
-        MenuView.showMessage("No board game found with that title.");
+        return false;
     }
 
-    public static void undoLastAction(GameCollection gameCollection){
-        HistoryService.revertLastAction(gameCollection);
-        MenuView.showMessage("Last action reverted successfully.");
+    public void undoLastAction(GameCollection gameCollection){
+        this.historyService.revertLastAction(gameCollection);
     }
 
-    /**
-     * Displays all games in the collection.
-     *
-     * @param gameCollection collection to display
-     */
-    public static void listGames(GameCollection gameCollection) {
-        GamePrinter gamePrinter = new GamePrinter(gameCollection);
-        gamePrinter.viewAllGames();
-    }
-
-    public static void summaryGames(GameCollection gameCollection){
-        GamePrinter gamePrinter = new GamePrinter(gameCollection);
-        gamePrinter.summaryGames();
-    }
-
-    public static void filterGamesByPlayerCount(GameCollection gameCollection){
-        int players = Integer.parseInt(InputHandler.ask("How many players?:"));
+    public List<BoardGame> filterGamesByPlayerCount(GameCollection gameCollection, int players){
 
         java.util.List<BoardGame> filteredGames = gameCollection.getGames().stream()
                 .filter(g -> g.minPlayers() <= players && g.maxPlayers() >= players)
                 .sorted(java.util.Comparator.comparing(BoardGame::title))
                 .toList();
 
-        if(filteredGames.isEmpty()){
-            MenuView.showMessage("No games found for " + players + " player(s).");
-            return;
-        }
-
-        MenuView.showMessage("\n=== Games for " + players + " player(s) ===");
-        for(BoardGame game : filteredGames){
-            MenuView.showMessage("- " + game.title() + " (" + game.minPlayers() + "-" + game.maxPlayers() + " players, " + game.category() + ")");
-        }
+        return filteredGames;
     }
 }

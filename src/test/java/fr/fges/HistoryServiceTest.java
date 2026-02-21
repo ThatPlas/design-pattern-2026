@@ -13,14 +13,15 @@ public class HistoryServiceTest {
     void actionTester() {
         History history = new History();
         GameCollection collection = new GameCollection();
+        HistoryService historyService = new HistoryService();
         BoardGame jeuTest = new BoardGame("Azul", 2, 4, "Abstract");
 
         AddGameLog logging = new AddGameLog(collection, jeuTest);
 
-        HistoryService.addLogAction(history, logging);
+        historyService.addLogAction(history, logging);
         assertEquals(logging, history.getLastAction());
 
-        HistoryService.removeLogAction(history,logging);
+        historyService.removeLogAction(history,logging);
 
         assertEquals(0, history.getActions().size());
     }
@@ -28,12 +29,13 @@ public class HistoryServiceTest {
     @Test
      void revertLastAction(){
         GameCollection collection = new GameCollection();
+        HistoryService historyService = new HistoryService();
         BoardGame jeuTest = new BoardGame("Azul", 2, 4, "Abstract");
 
         collection.addGame(jeuTest);
-        HistoryService.addLogAction(collection.getHistory(), new AddGameLog(collection, jeuTest));
+        historyService.addLogAction(collection.getHistory(), new AddGameLog(collection, jeuTest));
 
-        HistoryService.revertLastAction(collection);
+        historyService.revertLastAction(collection);
 
         assertEquals(0, collection.getGames().size());
     }

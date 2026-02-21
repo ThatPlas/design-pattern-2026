@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CSVGameRepository implements Repository<List<BoardGame>> {
+public class CSVGameRepository implements Repository {
 
     @Override
     public boolean save(List<BoardGame> games, String file) {

@@ -1,8 +1,10 @@
 package fr.fges;
 
-public interface Repository<T> {
+import java.util.List;
 
-    boolean save(T object, String file);
-    T load(String file);
+public interface Repository {
+
+    boolean save(List<BoardGame> object, String file);
+    List<BoardGame> load(String file);
 
 }

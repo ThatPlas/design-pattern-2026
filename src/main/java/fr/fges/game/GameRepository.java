@@ -16,14 +16,14 @@ import java.util.*;
  */
 public class GameRepository {
 
-    private final Map<String, Repository<List<BoardGame>>> repositories = new HashMap<>();
+    private final Map<String, Repository> repositories = new HashMap<>();
 
     public GameRepository(){
         repositories.put(".json", new JSONGameRepository());
         repositories.put(".csv", new CSVGameRepository());
     }
 
-    public void registerRepository(String extension, Repository<List<BoardGame>> repository){
+    public void registerRepository(String extension, Repository repository){
         repositories.put(extension.toLowerCase(), repository);
     }
 
@@ -45,7 +45,7 @@ public class GameRepository {
             return Collections.emptyList();
         }
 
-        Repository<List<BoardGame>> repository = repositories.get(storageFile.toLowerCase().substring(storageFile.lastIndexOf('.')));
+        Repository repository = repositories.get(storageFile.toLowerCase().substring(storageFile.lastIndexOf('.')));
 
         return repository.load(storageFile);
     }
@@ -78,7 +78,7 @@ public class GameRepository {
             return false;
         }
 
-        Repository<List<BoardGame>> repository = repositories.get(storageFile.toLowerCase().substring(storageFile.lastIndexOf('.')));
+        Repository repository = repositories.get(storageFile.toLowerCase().substring(storageFile.lastIndexOf('.')));
 
         return repository.save(collection.getGames(), storageFile);
     }

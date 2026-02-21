@@ -8,6 +8,6 @@ public interface MenuOption {
 
     String title();
     MenuHandler getHandler();
-    boolean isAvailable(LocalDate date  );
+    boolean isAvailable(LocalDate date);
 
 }

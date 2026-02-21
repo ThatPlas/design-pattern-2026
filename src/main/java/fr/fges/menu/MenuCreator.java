@@ -1,5 +1,6 @@
 package fr.fges.menu;
 
+import fr.fges.game.GameService;
 import fr.fges.menu.handlers.MenuHandler;
 import fr.fges.menu.options.*;
 
@@ -13,15 +14,19 @@ public class MenuCreator {
 
     private List<MenuOption> options = new ArrayList<>();
 
-    public MenuCreator(){
-        options.add(new AddGameOption());
-        options.add(new RemoveGameOption());
+    private final GameService gameService;
+
+    public MenuCreator(GameService gameService){
+        options.add(new AddGameOption(gameService));
+        options.add(new RemoveGameOption(gameService));
         options.add(new ListGameOption());
-        options.add(new FilterByPlayerCountOption());
-        options.add(new RecommandGameOption());
+        options.add(new FilterByPlayerCountOption(gameService));
+        options.add(new RecommandGameOption(gameService));
         options.add(new ViewSummaryOption());
-        options.add(new UndoActionOption());
-        options.add(new ExitOption());
+        options.add(new UndoActionOption(gameService));
+        options.add(new ExitOption(gameService));
+
+        this.gameService = gameService;
     }
 
     public Map<String, Integer> getAvailableOptions(LocalDate date){

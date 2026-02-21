@@ -1,10 +1,19 @@
 package fr.fges.menu.options;
 
+import fr.fges.game.GameService;
 import fr.fges.menu.handlers.MenuHandler;
+import fr.fges.menu.handlers.RemoveGameHandler;
 
 import java.time.LocalDate;
 
 public class RemoveGameOption implements MenuOption{
+
+    private final GameService gameService;
+
+    public RemoveGameOption(GameService gameService){
+        this.gameService = gameService;
+    }
+
     @Override
     public String title() {
         return "Remove Board Game";
@@ -12,7 +21,7 @@ public class RemoveGameOption implements MenuOption{
 
     @Override
     public MenuHandler getHandler() {
-        return null;
+        return new RemoveGameHandler(this.gameService);
     }
 
     @Override

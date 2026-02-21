@@ -3,6 +3,8 @@ package fr.fges;
 import fr.fges.exception.UnsupportedFileExtension;
 import fr.fges.game.GameCollection;
 import fr.fges.game.GameRepository;
+import fr.fges.game.GameService;
+import fr.fges.history.HistoryService;
 import fr.fges.menu.MenuController;
 
 /**
@@ -26,6 +28,10 @@ public class Main {
         }
 
         GameRepository repository = new GameRepository();
+        HistoryService historyService = new HistoryService();
+        GameService gameService = new GameService(repository, historyService);
+
+        MenuController menuController = new MenuController(gameService);
 
         Main.storageFile = args[0];
 
@@ -41,7 +47,7 @@ public class Main {
         System.out.println("Using storage file: " + storageFile);
 
         while (true) {
-            MenuController.handleMenu(collection);
+            menuController.handleMenu(collection);
         }
 
     }

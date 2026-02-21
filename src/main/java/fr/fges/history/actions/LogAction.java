@@ -1,13 +1,14 @@
 package fr.fges.history.actions;
 
+import fr.fges.BoardGame;
 import fr.fges.game.GameCollection;
 
-public abstract class LogAction<T> {
+public abstract class LogAction {
 
     protected final GameCollection collection;
-    protected final T actionContext;
+    protected final BoardGame actionContext;
 
-    public LogAction(GameCollection collection, T actionContext){
+    public LogAction(GameCollection collection, BoardGame actionContext){
         this.collection = collection;
         this.actionContext = actionContext;
     }
@@ -15,7 +16,7 @@ public abstract class LogAction<T> {
     public GameCollection getGameCollection(){
         return this.collection;
     }
-    public T getActionContext(){
+    public BoardGame getActionContext(){
         return this.actionContext;
     }
     public abstract void revert();

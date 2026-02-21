@@ -1,5 +1,6 @@
 package fr.fges.menu.options;
 
+import fr.fges.game.GameService;
 import fr.fges.menu.handlers.MenuHandler;
 import fr.fges.menu.handlers.ViewSummaryHandler;
 
@@ -7,6 +8,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 public class ViewSummaryOption implements MenuOption{
+
+
     @Override
     public String title() {
         return "View Summary (Weekend Special!)";
