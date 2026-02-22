@@ -31,6 +31,7 @@ public class MenuCreator {
         options.add(new RecommandGameOption(this.gameService));
         options.add(new ViewSummaryOption());
         options.add(new UndoActionOption(this.gameService));
+        options.add(new TournamentOption(this.gameService));
         options.add(new ExitOption(this.gameService));
     }
 
