@@ -1,0 +1,303 @@
+classDiagram
+    %% Core Domain Models
+    class BoardGame {
+        <<record>>
+        +String title
+        +int minPlayers
+        +int maxPlayers
+        +String category
+    }
+
+    class GameCollection {
+        -List~BoardGame~ games
+        -History history
+        +List~BoardGame~ getGames()
+        +History getHistory()
+        +addGame(BoardGame game)
+        +addGames(List~BoardGame~ games)
+        +removeGame(BoardGame game)
+        +isPresent(String title) boolean
+    }
+
+    %% Repository Pattern
+    class Repository {
+        <<interface>>
+        +save(List~BoardGame~ object, String file) boolean
+        +load(String file) List~BoardGame~
+    }
+
+    class GameRepository {
+        -Map~String, Repository~ repositories
+        +GameRepository()
+        +registerRepository(String extension, Repository repository)
+        +loadFromFile(String storageFile) List~BoardGame~
+        +saveToFile(GameCollection collection, String storageFile) boolean
+        +isSupportedExtension(String extension) boolean
+    }
+
+    class JSONGameRepository {
+        +save(List~BoardGame~ object, String file) boolean
+        +load(String storageFile) List~BoardGame~
+    }
+
+    class CSVGameRepository {
+        +save(List~BoardGame~ object, String file) boolean
+        +load(String storageFile) List~BoardGame~
+    }
+
+    %% History System (Command Pattern)
+    class LogAction {
+        <<abstract>>
+        #GameCollection collection
+        #BoardGame actionContext
+        +LogAction(GameCollection collection, BoardGame actionContext)
+        +getGameCollection() GameCollection
+        +getActionContext() BoardGame
+        +revert()*
+    }
+
+    class AddGameLog {
+        +AddGameLog(GameCollection collection, BoardGame game)
+        +revert()
+    }
+
+    class RemoveGameLog {
+        +RemoveGameLog(GameCollection collection, BoardGame game)
+        +revert()
+    }
+
+    class History {
+        -List~LogAction~ actions
+        +addAction(LogAction action)
+        +removeAction(LogAction action)
+        +getLastAction() LogAction
+    }
+
+    class HistoryService {
+        +addLogAction(History history, LogAction action)
+        +removeLogAction(History history, LogAction action)
+        +revertLastAction(GameCollection collection)
+    }
+
+    %% Service Layer
+    class GameService {
+        -GameRepository repository
+        -HistoryService historyService
+        +GameService(GameRepository gameRepository, HistoryService historyService)
+        +addGame(GameCollection gameCollection, BoardGame game) boolean
+        +removeGame(GameCollection gameCollection, String title) boolean
+        +recommendGame(GameCollection gameCollection) Optional~BoardGame~
+        +undoLastAction(GameCollection gameCollection)
+        +filterGamesByPlayerCount(GameCollection gameCollection, int players) List~BoardGame~
+    }
+
+    %% Menu System (Strategy Pattern)
+    class MenuHandler {
+        <<interface>>
+        +execute(GameCollection collection)
+    }
+
+    class AddGameHandler {
+        +execute(GameCollection collection)
+    }
+
+    class RemoveGameHandler {
+        +execute(GameCollection collection)
+    }
+
+    class ListGameHandler {
+        +execute(GameCollection collection)
+    }
+
+    class FilterByPlayerCountHandler {
+        +execute(GameCollection collection)
+    }
+
+    class RecommandGameHandler {
+        +execute(GameCollection collection)
+    }
+
+    class ViewSummaryHandler {
+        +execute(GameCollection collection)
+    }
+
+    class UndoActionHandler {
+        +execute(GameCollection collection)
+    }
+
+    class ExitHandler {
+        +execute(GameCollection collection)
+    }
+
+    class MenuOption {
+        <<interface>>
+        +title() String
+        +getHandler() MenuHandler
+        +isAvailable(LocalDate date) boolean
+    }
+
+    class AddGameOption {
+        +title() String
+        +getHandler() MenuHandler
+        +isAvailable(LocalDate date) boolean
+    }
+
+    class RemoveGameOption {
+        +title() String
+        +getHandler() MenuHandler
+        +isAvailable(LocalDate date) boolean
+    }
+
+    class ListGameOption {
+        +title() String
+        +getHandler() MenuHandler
+        +isAvailable(LocalDate date) boolean
+    }
+
+    class FilterByPlayerCountOption {
+        +title() String
+        +getHandler() MenuHandler
+        +isAvailable(LocalDate date) boolean
+    }
+
+    class RecommandGameOption {
+        +title() String
+        +getHandler() MenuHandler
+        +isAvailable(LocalDate date) boolean
+    }
+
+    class ViewSummaryOption {
+        +title() String
+        +getHandler() MenuHandler
+        +isAvailable(LocalDate date) boolean
+    }
+
+    class UndoActionOption {
+        +title() String
+        +getHandler() MenuHandler
+        +isAvailable(LocalDate date) boolean
+    }
+
+    class ExitOption {
+        +title() String
+        +getHandler() MenuHandler
+        +isAvailable(LocalDate date) boolean
+    }
+
+    class MenuCreator {
+        -List~MenuOption~ options
+        -GameService gameService
+        +MenuCreator(GameService gameService)
+        +getAvailableOptions(LocalDate date) Map~String, Integer~
+        +getOption(int i) MenuOption
+        +addOption(MenuOption option)
+        +putOption(MenuOption option, int index)
+    }
+
+    class MenuController {
+        -GameService gameService
+        +MenuController(GameService gameService)
+        +handleMenu(GameCollection collection)
+        -isValidChoice(String option, List~String~ currentOptions) boolean
+    }
+
+    class MenuView {
+        <<utility>>
+        +displayMainMenu(List~String~ options)
+        +showMessage(String message)
+    }
+
+    %% Utility Classes
+    class Main {
+        -static String storageFile
+        +main(String[] args)
+        +getStorageFile() String
+    }
+
+    class InputHandler {
+        <<utility>>
+        +ask(String prompt) String
+        +setInput(InputStream input)
+    }
+
+    class ExtensionChecker {
+        <<utility>>
+        +checkFileExtension(String filename, GameRepository repository)
+    }
+
+    class GamePrinter {
+        -GameCollection collection
+        +GamePrinter(GameCollection collection)
+        +viewAllGames()
+        +summaryGames()
+    }
+
+    class UnsupportedFileExtension {
+        <<exception>>
+        +UnsupportedFileExtension(String message)
+    }
+
+    %% Relationships
+    GameCollection --> BoardGame : contains
+    GameCollection --> History : has
+
+    GameService --> GameRepository : uses
+    GameService --> HistoryService : uses
+    GameService --> AddGameLog : creates
+    GameService --> RemoveGameLog : creates
+
+    GameRepository --> Repository : manages
+    JSONGameRepository ..|> Repository : implements
+    CSVGameRepository ..|> Repository : implements
+
+    LogAction <|-- AddGameLog : extends
+    LogAction <|-- RemoveGameLog : extends
+    LogAction --> GameCollection : operates on
+    LogAction --> BoardGame : context
+
+    History --> LogAction : stores
+    HistoryService --> History : manages
+
+    MenuHandler <|-- AddGameHandler : implements
+    MenuHandler <|-- RemoveGameHandler : implements
+    MenuHandler <|-- ListGameHandler : implements
+    MenuHandler <|-- FilterByPlayerCountHandler : implements
+    MenuHandler <|-- RecommandGameHandler : implements
+    MenuHandler <|-- ViewSummaryHandler : implements
+    MenuHandler <|-- UndoActionHandler : implements
+    MenuHandler <|-- ExitHandler : implements
+
+    MenuOption <|-- AddGameOption : implements
+    MenuOption <|-- RemoveGameOption : implements
+    MenuOption <|-- ListGameOption : implements
+    MenuOption <|-- FilterByPlayerCountOption : implements
+    MenuOption <|-- RecommandGameOption : implements
+    MenuOption <|-- ViewSummaryOption : implements
+    MenuOption <|-- UndoActionOption : implements
+    MenuOption <|-- ExitOption : implements
+
+    MenuOption --> MenuHandler : provides
+
+    MenuCreator --> MenuOption : manages
+    MenuCreator --> GameService : uses
+
+    MenuController --> MenuCreator : uses
+    MenuController --> MenuView : uses
+    MenuController --> GameService : uses
+
+    Main --> GameRepository : creates
+    Main --> HistoryService : creates
+    Main --> GameService : creates
+    Main --> MenuController : creates
+    Main --> ExtensionChecker : uses
+
+    AddGameHandler --> GameService : uses
+    RemoveGameHandler --> GameService : uses
+    FilterByPlayerCountHandler --> GameService : uses
+    RecommandGameHandler --> GameService : uses
+    UndoActionHandler --> GameService : uses
+
+    ListGameHandler --> GamePrinter : uses
+    ViewSummaryHandler --> GamePrinter : uses
+
+    GamePrinter --> GameCollection : displays
