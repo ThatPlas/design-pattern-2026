@@ -8,12 +8,22 @@ import fr.fges.menu.MenuView;
 
 public class AddGameHandler implements MenuHandler{
 
-    private GameService gameService;
+    private final GameService gameService;
 
+    /**
+     * Constructs an AddGameHandler with the specified game service.
+     *
+     * @param gameService the service for handling game operations
+     */
     public AddGameHandler(GameService gameService){
         this.gameService = gameService;
     }
 
+    /**
+     * Executes the add game handler by prompting for game details and adding the game.
+     *
+     * @param collection the game collection to add the game to
+     */
     @Override
     public void execute(GameCollection collection) {
 

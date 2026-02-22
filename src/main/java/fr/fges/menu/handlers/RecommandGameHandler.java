@@ -9,12 +9,22 @@ import java.util.Optional;
 
 public class RecommandGameHandler implements MenuHandler{
 
-    private GameService gameService;
+    private final GameService gameService;
 
+    /**
+     * Constructs a RecommandGameHandler with the specified game service.
+     *
+     * @param gameService the service for handling game operations
+     */
     public RecommandGameHandler(GameService gameService){
         this.gameService = gameService;
     }
 
+    /**
+     * Executes the recommend game handler by finding and displaying a suitable game.
+     *
+     * @param collection the game collection to search for recommendations
+     */
     @Override
     public void execute(GameCollection collection) {
         Optional<BoardGame> optional = this.gameService.recommendGame(collection);

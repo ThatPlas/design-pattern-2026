@@ -1,13 +1,10 @@
 package fr.fges.game;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.fges.BoardGame;
 import fr.fges.ExtensionChecker;
 import fr.fges.Repository;
 import fr.fges.exception.UnsupportedFileExtension;
 
-import javax.xml.validation.Validator;
 import java.io.*;
 import java.util.*;
 
@@ -18,11 +15,20 @@ public class GameRepository {
 
     private final Map<String, Repository> repositories = new HashMap<>();
 
+    /**
+     * Constructs a GameRepository with default CSV and JSON repositories.
+     */
     public GameRepository(){
         repositories.put(".json", new JSONGameRepository());
         repositories.put(".csv", new CSVGameRepository());
     }
 
+    /**
+     * Registers a custom repository for a specific file extension.
+     *
+     * @param extension the file extension to associate with the repository
+     * @param repository the repository implementation to register
+     */
     public void registerRepository(String extension, Repository repository){
         repositories.put(extension.toLowerCase(), repository);
     }

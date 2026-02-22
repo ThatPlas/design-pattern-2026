@@ -12,10 +12,13 @@ import java.util.*;
  */
 public class MenuController {
 
-    private static Map<String, MenuHandler> map = new HashMap<>();
-
     private final GameService gameService;
 
+    /**
+     * Constructs a MenuController with the specified game service.
+     *
+     * @param gameService the service for handling game operations
+     */
     public MenuController(GameService gameService){
         this.gameService = gameService;
     }
@@ -44,6 +47,13 @@ public class MenuController {
         menuCreator.getOption(availableOptions.get(optionsList.get(Integer.parseInt(choice) - 1))).getHandler().execute(collection);
     }
 
+    /**
+     * Validates if the user's choice is a valid menu option.
+     *
+     * @param option the user's choice as string
+     * @param currentOptions the list of available options
+     * @return true if the choice is valid, false otherwise
+     */
     private boolean isValidChoice(String option, List<String> currentOptions){
 
         try{
@@ -52,11 +62,7 @@ public class MenuController {
             return false;
         }
 
-        if(Integer.parseInt(option) > currentOptions.size() || Integer.parseInt(option) < 1){
-            return false;
-        }
-
-        return true;
+        return Integer.parseInt(option) <= currentOptions.size() && Integer.parseInt(option) >= 1;
 
     }
 

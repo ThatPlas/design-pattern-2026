@@ -14,6 +14,10 @@ import org.junit.jupiter.api.Test;
 
 class MenuControllerTest {
 
+    /**
+     * Tests that the menu controller handles invalid input gracefully without crashing.
+     * Simulates invalid user input and verifies that no exception is thrown.
+     */
     @Test
     void handleMenu_withInvalidChoice_shouldNotCrash() {
         System.setIn(new ByteArrayInputStream("invalid\n".getBytes()));

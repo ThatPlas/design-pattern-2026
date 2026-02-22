@@ -1,10 +1,14 @@
 package fr.fges.menu.handlers;
 
 import fr.fges.game.GameCollection;
-import fr.fges.game.GameService;
 
 public interface  MenuHandler {
 
+    /**
+     * Executes the menu handler action on the given game collection.
+     *
+     * @param collection the game collection to operate on
+     */
     void execute(GameCollection collection  );
 
 }

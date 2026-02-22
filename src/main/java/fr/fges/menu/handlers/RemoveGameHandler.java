@@ -7,12 +7,22 @@ import fr.fges.menu.MenuView;
 
 public class RemoveGameHandler implements MenuHandler{
 
-    private GameService gameService;
+    private final GameService gameService;
 
+    /**
+     * Constructs a RemoveGameHandler with the specified game service.
+     *
+     * @param gameService the service for handling game operations
+     */
     public RemoveGameHandler(GameService gameService){
         this.gameService = gameService;
     }
 
+    /**
+     * Executes the remove game handler by prompting for title and removing the game.
+     *
+     * @param collection the game collection to remove the game from
+     */
     @Override
     public void execute(GameCollection collection) {
 

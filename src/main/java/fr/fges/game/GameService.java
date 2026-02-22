@@ -6,7 +6,6 @@ import fr.fges.Main;
 import fr.fges.history.HistoryService;
 import fr.fges.history.actions.AddGameLog;
 import fr.fges.history.actions.RemoveGameLog;
-import fr.fges.menu.MenuView;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +18,12 @@ public class GameService {
     private final GameRepository repository;
     private final HistoryService historyService;
 
+    /**
+     * Constructs a GameService with the specified repository and history service.
+     *
+     * @param gameRepository the repository for persisting game data
+     * @param historyService the service for managing game history
+     */
     public GameService(GameRepository gameRepository, HistoryService historyService){
         this.repository = gameRepository;
         this.historyService = historyService;
@@ -41,6 +46,12 @@ public class GameService {
         return true;
     }
 
+    /**
+     * Recommends a game based on the specified number of players.
+     *
+     * @param gameCollection the collection to search for games
+     * @return an Optional containing a suitable game, or empty if none found
+     */
     public Optional<BoardGame> recommendGame(GameCollection gameCollection){
         int players = Integer.parseInt(InputHandler.ask("How many players?:"));
 
@@ -70,17 +81,27 @@ public class GameService {
         return false;
     }
 
+    /**
+     * Undoes the last action performed on the game collection.
+     *
+     * @param gameCollection the collection to revert the last action on
+     */
     public void undoLastAction(GameCollection gameCollection){
         this.historyService.revertLastAction(gameCollection);
     }
 
+    /**
+     * Filters games in the collection by the specified number of players.
+     *
+     * @param gameCollection the collection to filter
+     * @param players the number of players to filter by
+     * @return a list of games that support the specified number of players, sorted by title
+     */
     public List<BoardGame> filterGamesByPlayerCount(GameCollection gameCollection, int players){
 
-        java.util.List<BoardGame> filteredGames = gameCollection.getGames().stream()
+        return gameCollection.getGames().stream()
                 .filter(g -> g.minPlayers() <= players && g.maxPlayers() >= players)
                 .sorted(java.util.Comparator.comparing(BoardGame::title))
                 .toList();
-
-        return filteredGames;
     }
 }

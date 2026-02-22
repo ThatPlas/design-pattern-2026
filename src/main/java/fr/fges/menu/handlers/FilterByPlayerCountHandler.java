@@ -12,10 +12,20 @@ public class FilterByPlayerCountHandler implements MenuHandler{
 
     private final GameService gameService;
 
+    /**
+     * Constructs a FilterByPlayerCountHandler with the specified game service.
+     *
+     * @param gameService the service for handling game operations
+     */
     public FilterByPlayerCountHandler(GameService gameService){
         this.gameService = gameService;
     }
 
+    /**
+     * Executes the filter handler by prompting for player count and displaying matching games.
+     *
+     * @param collection the game collection to filter
+     */
     @Override
     public void execute(GameCollection collection) {
         int players = Integer.parseInt(InputHandler.ask("How many players?:"));

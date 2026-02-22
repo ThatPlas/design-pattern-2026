@@ -52,6 +52,11 @@ public class Main {
 
     }
 
+    /**
+     * Returns the storage file path set at application startup.
+     *
+     * @return the storage file path
+     */
     public static String getStorageFile(){
         return Main.storageFile;
     }

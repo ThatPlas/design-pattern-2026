@@ -9,6 +9,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HistoryServiceTest {
+    /**
+     * Tests the basic functionality of adding and removing log actions from history.
+     * Verifies that actions can be added, retrieved as the last action, and removed.
+     */
     @Test
     void actionTester() {
         History history = new History();
@@ -26,6 +30,10 @@ public class HistoryServiceTest {
         assertEquals(0, history.getActions().size());
     }
 
+    /**
+     * Tests that the last action can be reverted successfully.
+     * Verifies that after adding a game and then reverting, the collection becomes empty.
+     */
     @Test
      void revertLastAction(){
         GameCollection collection = new GameCollection();

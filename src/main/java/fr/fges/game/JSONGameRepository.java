@@ -11,6 +11,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class JSONGameRepository implements Repository {
+    /**
+     * Saves a list of board games to a JSON file with pretty printing.
+     *
+     * @param object the list of games to save
+     * @param file the file path to save to
+     * @return true if save was successful, false otherwise
+     */
     @Override
     public boolean save(List<BoardGame> object, String file) {
         try {
@@ -23,15 +30,20 @@ public class JSONGameRepository implements Repository {
         }
     }
 
+    /**
+     * Loads board games from a JSON file.
+     *
+     * @param storageFile the JSON file path to load from
+     * @return list of loaded games, or empty list if error occurs
+     */
     @Override
     public List<BoardGame> load(String storageFile) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             File file = new File(storageFile);
-            List<BoardGame> loadedGames = mapper.readValue(file, new TypeReference<>() {
-            });
 
-            return loadedGames;
+            return mapper.readValue(file, new TypeReference<>() {
+            });
         } catch (IOException e) {
             System.out.println("Error loading from JSON: " + e.getMessage());
             return Collections.emptyList();

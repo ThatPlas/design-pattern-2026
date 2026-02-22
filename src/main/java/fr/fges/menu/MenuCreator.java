@@ -1,7 +1,6 @@
 package fr.fges.menu;
 
 import fr.fges.game.GameService;
-import fr.fges.menu.handlers.MenuHandler;
 import fr.fges.menu.options.*;
 
 import java.time.LocalDate;
@@ -12,23 +11,35 @@ import java.util.Map;
 
 public class MenuCreator {
 
-    private List<MenuOption> options = new ArrayList<>();
+    private final List<MenuOption> options = new ArrayList<>();
 
     private final GameService gameService;
 
+    /**
+     * Constructs a MenuCreator with the specified game service and default options.
+     *
+     * @param gameService the service for handling game operations
+     */
     public MenuCreator(GameService gameService){
-        options.add(new AddGameOption(gameService));
-        options.add(new RemoveGameOption(gameService));
-        options.add(new ListGameOption());
-        options.add(new FilterByPlayerCountOption(gameService));
-        options.add(new RecommandGameOption(gameService));
-        options.add(new ViewSummaryOption());
-        options.add(new UndoActionOption(gameService));
-        options.add(new ExitOption(gameService));
 
         this.gameService = gameService;
+
+        options.add(new AddGameOption(this.gameService));
+        options.add(new RemoveGameOption(this.gameService));
+        options.add(new ListGameOption());
+        options.add(new FilterByPlayerCountOption(this.gameService));
+        options.add(new RecommandGameOption(this.gameService));
+        options.add(new ViewSummaryOption());
+        options.add(new UndoActionOption(this.gameService));
+        options.add(new ExitOption(this.gameService));
     }
 
+    /**
+     * Returns a map of available menu options for the given date.
+     *
+     * @param date the date to check option availability for
+     * @return map of option titles to their indices
+     */
     public Map<String, Integer> getAvailableOptions(LocalDate date){
 
         Map<String, Integer> options = new LinkedHashMap<>();
@@ -41,14 +52,31 @@ public class MenuCreator {
         return options;
     }
 
+    /**
+     * Returns the menu option at the specified index.
+     *
+     * @param i the index of the option to retrieve
+     * @return the MenuOption at the given index
+     */
     public MenuOption getOption(int i){
         return this.options.get(i);
     }
 
+    /**
+     * Adds a new menu option before the last two options (Exit and Undo).
+     *
+     * @param option the menu option to add
+     */
     public void addOption(MenuOption option){
         this.options.add(this.options.size()-2, option);
     }
 
+    /**
+     * Replaces the menu option at the specified index.
+     *
+     * @param option the new menu option to place
+     * @param index the index where to place the option
+     */
     public void putOption(MenuOption option, int index){
         this.options.set(index, option);
     }

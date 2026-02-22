@@ -1,14 +1,8 @@
 package fr.fges;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintStream;
 
 import fr.fges.game.GameCollection;
 import fr.fges.game.GameRepository;
@@ -19,6 +13,10 @@ import org.mockito.MockedStatic;
 
 class GameServiceTest {
 
+    /**
+     * Tests that a game can be successfully added to a collection.
+     * Verifies that the game is added and the collection size increases.
+     */
     @Test
     void addGame_shouldAddGameToCollection() {
 
@@ -38,6 +36,10 @@ class GameServiceTest {
         }
     }
 
+    /**
+     * Tests that an existing game can be successfully removed from a collection.
+     * Verifies that the game is removed and the collection size decreases to zero.
+     */
     @Test
     void removeGame_shouldRemoveExistingGame() {
 

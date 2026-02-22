@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class GamePrinter {
 
-    private GameCollection gameCollection;
+    private final GameCollection gameCollection;
 
     /**
      * Creates a printer for the given collection.
@@ -42,6 +42,9 @@ public class GamePrinter {
         }
     }
 
+    /**
+     * Displays a summary of up to 2 random games from the collection.
+     */
     public void summaryGames(){
 
         System.out.println();

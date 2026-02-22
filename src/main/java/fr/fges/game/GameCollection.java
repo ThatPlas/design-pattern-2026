@@ -14,6 +14,9 @@ public class GameCollection {
 
     private final History history;
 
+    /**
+     * Constructs a GameCollection with an empty game list and new history.
+     */
     public GameCollection(){
         this.history = new History();
         this.games = new ArrayList<>();
@@ -64,6 +67,12 @@ public class GameCollection {
         games.remove(game);
     }
 
+    /**
+     * Checks if a game with the given title exists in the collection.
+     *
+     * @param title the title to search for
+     * @return true if a game with the title exists, false otherwise
+     */
     public boolean isPresent(String title){
         return games.stream().anyMatch(game -> game.title().equals(title));
     }
