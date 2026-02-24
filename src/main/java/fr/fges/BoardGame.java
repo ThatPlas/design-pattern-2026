@@ -16,6 +16,6 @@ public record BoardGame(
 ) {
     @Override
     public String toString() {
-        return title + "\" (" + minPlayers + "-" + maxPlayers + " players, " + category+ ")";
+        return title + " (" + minPlayers + "-" + maxPlayers + " players, " + category+ ")";
     }
 }
