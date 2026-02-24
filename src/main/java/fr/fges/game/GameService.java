@@ -1,6 +1,7 @@
 package fr.fges.game;
 
 import fr.fges.BoardGame;
+import fr.fges.GameRepository;
 import fr.fges.InputHandler;
 import fr.fges.Main;
 import fr.fges.history.HistoryService;
@@ -42,7 +43,7 @@ public class GameService {
 
         gameCollection.addGame(game);
         this.historyService.addLogAction(gameCollection.getHistory(), new AddGameLog(gameCollection, game));
-        this.repository.saveToFile(gameCollection, Main.getStorageFile());
+        this.repository.save(gameCollection.getGames());
         return true;
     }
 
@@ -74,7 +75,7 @@ public class GameService {
             if (game.title().equals(title)) {
                 gameCollection.removeGame(game);
                 this.historyService.addLogAction(gameCollection.getHistory(), new RemoveGameLog(gameCollection, game));
-                this.repository.saveToFile(gameCollection, Main.getStorageFile());
+                this.repository.save(gameCollection.getGames());
                 return true;
             }
         }

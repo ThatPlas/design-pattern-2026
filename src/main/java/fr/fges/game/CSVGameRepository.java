@@ -1,25 +1,30 @@
 package fr.fges.game;
 
 import fr.fges.BoardGame;
-import fr.fges.Repository;
+import fr.fges.GameRepository;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CSVGameRepository implements Repository {
+public class CSVGameRepository implements GameRepository {
+
+    private String storageFile;
+
+    public CSVGameRepository(String storageFile){
+        this.storageFile = storageFile;
+    }
 
     /**
      * Saves a list of board games to a CSV file.
      *
      * @param games the list of games to save
-     * @param file the file path to save to
      * @return true if save was successful, false otherwise
      */
     @Override
-    public boolean save(List<BoardGame> games, String file) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+    public boolean save(List<BoardGame> games) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.storageFile))) {
             writer.write("title,minPlayers,maxPlayers,category");
             writer.newLine();
             for (BoardGame game : games) {
@@ -36,12 +41,11 @@ public class CSVGameRepository implements Repository {
     /**
      * Loads board games from a CSV file.
      *
-     * @param file the CSV file path to load from
      * @return list of loaded games, or empty list if error occurs
      */
     @Override
-    public List<BoardGame> load(String file) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+    public List<BoardGame> load() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(this.storageFile))) {
             String line;
             boolean firstLine = true;
             List<BoardGame> loadedGames = new ArrayList<>();

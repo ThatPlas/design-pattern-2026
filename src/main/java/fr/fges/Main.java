@@ -2,7 +2,7 @@ package fr.fges;
 
 import fr.fges.exception.UnsupportedFileExtension;
 import fr.fges.game.GameCollection;
-import fr.fges.game.GameRepository;
+import fr.fges.game.GameRepositoryFactory;
 import fr.fges.game.GameService;
 import fr.fges.history.HistoryService;
 import fr.fges.menu.MenuController;
@@ -11,8 +11,6 @@ import fr.fges.menu.MenuController;
  * Application entry point for the board game collection CLI.
  */
 public class Main {
-
-    private static String storageFile;
 
     /**
      * Boots the application and starts the menu loop.
@@ -27,38 +25,22 @@ public class Main {
             System.exit(1);
         }
 
-        GameRepository repository = new GameRepository();
+        GameRepository repository = GameRepositoryFactory.create(args[0]);
         HistoryService historyService = new HistoryService();
         GameService gameService = new GameService(repository, historyService);
 
         MenuController menuController = new MenuController(gameService);
 
-        Main.storageFile = args[0];
-
-        String storageFile = args[0];
-        ExtensionChecker.checkFileExtension(storageFile, repository);
-
         GameCollection collection = new GameCollection();
 
-        collection.addGames(
-                repository.loadFromFile(storageFile)
-        );
+        collection.addGames(repository.load());
 
-        System.out.println("Using storage file: " + storageFile);
+        System.out.println("Using storage file: " + args[0]);
 
         while (true) {
             menuController.handleMenu(collection);
         }
 
-    }
-
-    /**
-     * Returns the storage file path set at application startup.
-     *
-     * @return the storage file path
-     */
-    public static String getStorageFile(){
-        return Main.storageFile;
     }
 }
 

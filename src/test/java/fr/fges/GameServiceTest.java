@@ -1,15 +1,13 @@
 package fr.fges;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.when;
 
+import fr.fges.exception.UnsupportedFileExtension;
 import fr.fges.game.GameCollection;
-import fr.fges.game.GameRepository;
+import fr.fges.game.GameRepositoryFactory;
 import fr.fges.game.GameService;
 import fr.fges.history.HistoryService;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
 
 class GameServiceTest {
 
@@ -18,22 +16,17 @@ class GameServiceTest {
      * Verifies that the game is added and the collection size increases.
      */
     @Test
-    void addGame_shouldAddGameToCollection() {
+    void addGame_shouldAddGameToCollection() throws UnsupportedFileExtension {
 
-        try (MockedStatic<Main> mockedMain = mockStatic(Main.class)) {
-            mockedMain.when(Main::getStorageFile).thenReturn("saves/test.json");
+        GameCollection collection = new GameCollection();
 
-            when(Main.getStorageFile()).thenReturn("saves/test.json");
+        GameService gameService = new GameService(GameRepositoryFactory.create("saves/test.json"), new HistoryService());
 
-            GameCollection collection = new GameCollection();
+        gameService.addGame(collection, new BoardGame("Catan", 3, 4, "Strategy"));
 
-            GameService gameService = new GameService(new GameRepository(), new HistoryService());
+        assertEquals(1, collection.getGames().size());
+        assertEquals("Catan", collection.getGames().getFirst().title());
 
-            gameService.addGame(collection, new BoardGame("Catan", 3, 4, "Strategy"));
-
-            assertEquals(1, collection.getGames().size());
-            assertEquals("Catan", collection.getGames().getFirst().title());
-        }
     }
 
     /**
@@ -41,20 +34,17 @@ class GameServiceTest {
      * Verifies that the game is removed and the collection size decreases to zero.
      */
     @Test
-    void removeGame_shouldRemoveExistingGame() {
+    void removeGame_shouldRemoveExistingGame() throws UnsupportedFileExtension {
 
-        try (MockedStatic<Main> mockedMain = mockStatic(Main.class)){
-            mockedMain.when(Main::getStorageFile).thenReturn("saves/test.json");
+        GameCollection collection = new GameCollection();
+        GameService gameService = new GameService(GameRepositoryFactory.create("saves/test.json"), new HistoryService());
+        BoardGame game = new BoardGame("Catan", 3, 4, "Strategy");
+        collection.addGame(game);
 
-            GameCollection collection = new GameCollection();
-            GameService gameService = new GameService(new GameRepository(), new HistoryService());
-            BoardGame game = new BoardGame("Catan", 3, 4, "Strategy");
-            collection.addGame(game);
+        gameService.removeGame(collection, game.title());
 
-            gameService.removeGame(collection, game.title());
+        assertEquals(0, collection.getGames().size());
 
-            assertEquals(0, collection.getGames().size());
-        }
     }
 
     /*

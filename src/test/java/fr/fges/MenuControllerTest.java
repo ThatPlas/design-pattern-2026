@@ -2,11 +2,11 @@ package fr.fges;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import java.awt.*;
 import java.io.ByteArrayInputStream;
 
+import fr.fges.exception.UnsupportedFileExtension;
 import fr.fges.game.GameCollection;
-import fr.fges.game.GameRepository;
+import fr.fges.game.GameRepositoryFactory;
 import fr.fges.game.GameService;
 import fr.fges.history.HistoryService;
 import fr.fges.menu.MenuController;
@@ -19,9 +19,9 @@ class MenuControllerTest {
      * Simulates invalid user input and verifies that no exception is thrown.
      */
     @Test
-    void handleMenu_withInvalidChoice_shouldNotCrash() {
+    void handleMenu_withInvalidChoice_shouldNotCrash() throws UnsupportedFileExtension {
         System.setIn(new ByteArrayInputStream("invalid\n".getBytes()));
-        GameService gameService = new GameService(new GameRepository(), new HistoryService());
+        GameService gameService = new GameService(GameRepositoryFactory.create("saves/test.json"), new HistoryService());
         MenuController menuController = new MenuController(gameService);
 
         assertDoesNotThrow(() -> menuController.handleMenu(new GameCollection()));
