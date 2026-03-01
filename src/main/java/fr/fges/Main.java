@@ -6,6 +6,7 @@ import fr.fges.game.GameRepositoryFactory;
 import fr.fges.game.GameService;
 import fr.fges.history.HistoryService;
 import fr.fges.menu.MenuController;
+import fr.fges.tournament.TournamentService;
 
 /**
  * Application entry point for the board game collection CLI.
@@ -28,8 +29,9 @@ public class Main {
         GameRepository repository = GameRepositoryFactory.create(args[0]);
         HistoryService historyService = new HistoryService();
         GameService gameService = new GameService(repository, historyService);
+        TournamentService tournamentService = new TournamentService();
 
-        MenuController menuController = new MenuController(gameService);
+        MenuController menuController = new MenuController(gameService, tournamentService);
 
         GameCollection collection = new GameCollection();
 

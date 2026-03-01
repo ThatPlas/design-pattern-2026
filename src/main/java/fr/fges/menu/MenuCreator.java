@@ -2,6 +2,7 @@ package fr.fges.menu;
 
 import fr.fges.game.GameService;
 import fr.fges.menu.options.*;
+import fr.fges.tournament.TournamentService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,15 +15,18 @@ public class MenuCreator {
     private final List<MenuOption> options = new ArrayList<>();
 
     private final GameService gameService;
+    private final TournamentService tournamentService;
 
     /**
      * Constructs a MenuCreator with the specified game service and default options.
      *
      * @param gameService the service for handling game operations
      */
-    public MenuCreator(GameService gameService){
+    public MenuCreator(GameService gameService, TournamentService tournamentService){
 
         this.gameService = gameService;
+        this.tournamentService = tournamentService;
+
 
         options.add(new AddGameOption(this.gameService));
         options.add(new RemoveGameOption(this.gameService));
@@ -31,7 +35,7 @@ public class MenuCreator {
         options.add(new RecommandGameOption(this.gameService));
         options.add(new ViewSummaryOption());
         options.add(new UndoActionOption(this.gameService));
-        options.add(new TournamentOption(this.gameService));
+        options.add(new TournamentOption(this.gameService, tournamentService));
         options.add(new ExitOption(this.gameService));
     }
 

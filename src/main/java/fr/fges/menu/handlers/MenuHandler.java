@@ -2,7 +2,7 @@ package fr.fges.menu.handlers;
 
 import fr.fges.game.GameCollection;
 
-public interface  MenuHandler {
+public interface MenuHandler {
 
     /**
      * Executes the menu handler action on the given game collection.

@@ -3,6 +3,7 @@ package fr.fges.menu;
 import fr.fges.game.GameCollection;
 import fr.fges.game.GameService;
 import fr.fges.menu.handlers.MenuHandler;
+import fr.fges.tournament.TournamentService;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -13,14 +14,16 @@ import java.util.*;
 public class MenuController {
 
     private final GameService gameService;
+    private final TournamentService tournamentService;
 
     /**
      * Constructs a MenuController with the specified game service.
      *
      * @param gameService the service for handling game operations
      */
-    public MenuController(GameService gameService){
+    public MenuController(GameService gameService, TournamentService tournamentService){
         this.gameService = gameService;
+        this.tournamentService = tournamentService;
     }
 
     /**
@@ -30,7 +33,7 @@ public class MenuController {
      */
 
     public void handleMenu(GameCollection collection) {
-        MenuCreator menuCreator = new MenuCreator(this.gameService);
+        MenuCreator menuCreator = new MenuCreator(this.gameService, this.tournamentService);
         Map<String, Integer> availableOptions = menuCreator.getAvailableOptions(LocalDate.now());
         List<String> optionsList = new ArrayList<>(availableOptions.keySet());
 
